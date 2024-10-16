@@ -15,12 +15,6 @@ Tragicbyte is a text-based image editor powered by generative AI, enabling users
 - Text-to-image transformation technologies
 - 3D modeling and augmented reality frameworks (future plans)
 
-## Project Dependencies
-- Flask
-- torch
-- albumentations
-- other necessary libraries (list them as needed)
-
 ## Project Idea Roadmap
 1. **Phase 1:** Implement text-based image editing while maintaining consistency.
 2. **Phase 2:** Develop capabilities to convert edited images into 3D models.
