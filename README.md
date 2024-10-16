@@ -54,7 +54,7 @@ The application requires extensive generation time due to the complexities of th
 Tragicbyte aims to democratize advanced image editing, making it accessible to a wide range of users. By leveraging generative AI, the application not only enhances personal creativity but also has the potential to reshape industries like skincare, fashion, and marketing. As users gain access to sophisticated editing tools, the overall quality of visual content across platforms is expected to rise, benefiting both creators and consumers.
 
 ## Running
-On colab:
+On Google Colab (using T4 GPU as computation is heavy)
 
 ```
 !git clone https://github.com/raghav-i/fwcgenai
@@ -115,6 +115,7 @@ plot_single_image('choose your image', title='Input Image')
   --pin_mem \
   --point_number 6 \
   --batch_size 1
+  # please wait around 4-6 min for the cell to finish executing
   ```
   ```
   # Visualize the output
