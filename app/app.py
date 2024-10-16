@@ -20,7 +20,7 @@ os.makedirs(app.config['EDITED_PATH'], exist_ok=True)
 port_no = 5000
 
 # Set ngrok authentication token (replace with your own token)
-ngrok.set_auth_token("2dDIoLlPFXbh3Mynt1AS6xejBaR_5QNdrAv2uRqReqS1WJQ4o")
+ngrok.set_auth_token("YOUR_AUTH_TOKEN")
 public_url = ngrok.connect(port_no).public_url
 print(f"To access the global link, please click {public_url}")
 
