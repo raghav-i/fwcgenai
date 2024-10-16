@@ -20,64 +20,52 @@ customBtn.addEventListener("click", function() {
 // Preview selected image
 realFileBtn.addEventListener("change", function() {
     const file = this.files[0];
-
     if (file) {
         const reader = new FileReader();
-
         reader.addEventListener("load", function() {
             const image = new Image();
             image.src = this.result;
-            image.classList.add("img-fluid"); // Adjust image width as needed
-            imagePreview.innerHTML = ""; // Clear previous image if any
+            image.classList.add("img-fluid");
+            imagePreview.innerHTML = "";
             imagePreview.appendChild(image);
         });
-
         reader.readAsDataURL(file);
-        customTxt.innerHTML = file.name; // Display file name
+        customTxt.innerHTML = file.name;
     } else {
         customTxt.innerHTML = "No file chosen, yet.";
-        imagePreview.innerHTML = ""; // Clear image preview
+        imagePreview.innerHTML = "";
     }
 });
 
 // Handle form submission
 imageForm.addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent default form submission
-
-    // Create FormData object to send files and prompt
+    event.preventDefault();
     const formData = new FormData();
-    formData.append("file", realFileBtn.files[0]); // Append file
-    formData.append("prompt", document.getElementById("prompt").value); // Append prompt text
+    formData.append("file", realFileBtn.files[0]);
+    formData.append("prompt", document.getElementById("prompt").value);
 
-    // Indicate loading state (optional)
     const loadingText = document.createElement("p");
     loadingText.textContent = "Uploading and processing your image...";
-    imagePreview.innerHTML = ""; // Clear previous previews
-    imagePreview.appendChild(loadingText); // Show loading message
+    imagePreview.innerHTML = "";
+    imagePreview.appendChild(loadingText);
 
-    // Use fetch to send form data to the Flask app
-    fetch('/upload', { // Update this URL to match your Flask endpoint
+    fetch('/upload', {
         method: 'POST',
         body: formData
     })
     .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json(); // Expecting a JSON response
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
     })
     .then(data => {
-        // Handle the response data here
         if (data.success) {
-            // If the response indicates success, you can show the edited image
-            const editedImage = document.createElement("img");
-            editedImage.src = `/static/edited/${data.edited_image}`; // Update this path if necessary
+            const editedImage = new Image();
+            editedImage.src = `static/edited/${data.edited_image}`;
             editedImage.classList.add("img-fluid");
-            imagePreview.innerHTML = ""; // Clear previous previews
-            imagePreview.appendChild(editedImage); // Display edited image
+            imagePreview.innerHTML = "";
+            imagePreview.appendChild(editedImage);
         } else {
-            // Handle errors if needed
-            alert(data.error || "Error uploading the image."); // Display specific error message if available
+            alert(data.error || "Error uploading the image.");
         }
     })
     .catch(error => {
