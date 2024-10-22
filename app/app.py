@@ -5,6 +5,7 @@ import subprocess
 import cv2
 import matplotlib.pyplot as plt
 from pyngrok import ngrok
+import threading
 
 # Flask app setup
 app = Flask(__name__)
@@ -37,6 +38,27 @@ def plot_single_image(img_file_path, title):
 def home():
     return render_template("index.html")
 
+def run_model(file_path, editing_prompt, edited_image_name):
+    try:
+        subprocess.run(['torchrun', '--rdzv_backend=c10d', '--rdzv_endpoint=localhost:29501', '--nnodes=1', '--nproc_per_node=1', 'train.py',
+                        '--image_file_path', file_path,
+                        '--image_caption', 'trees',
+                        '--editing_prompt', editing_prompt,
+                        '--diffusion_model_path', 'stabilityai/stable-diffusion-2-inpainting',
+                        '--output_dir', app.config['EDITED_PATH'],
+                        '--draw_box', '--lr', '5e-3',
+                        '--max_window_size', '15', '--per_image_iteration', '7',
+                        '--epochs', '1', '--num_workers', '8',
+                        '--seed', '42', '--pin_mem',
+                        '--point_number', '6', '--batch_size', '1'])
+
+        edited_image_path = os.path.join(app.config['EDITED_PATH'], edited_image_name)
+        if not os.path.exists(edited_image_path):
+            print('Image processing failed.')
+
+    except Exception as e:
+        print(f"Error during model execution: {str(e)}")
+
 @app.route('/upload', methods=['POST'])
 def upload():
     try:
@@ -49,31 +71,15 @@ def upload():
         # Retrieve the user-provided prompt
         editing_prompt = request.form['prompt']
 
-        # Run training script
-        subprocess.run(['torchrun', '--nnodes=1', '--nproc_per_node=1', 'train.py',
-                        '--image_file_path', file_path,
-                        '--image_caption', 'trees',
-                        '--editing_prompt', editing_prompt,
-                        '--diffusion_model_path', 'stabilityai/stable-diffusion-2-inpainting',
-                        '--output_dir', app.config['EDITED_PATH'],
-                        '--draw_box', '--lr', '5e-3',
-                        '--max_window_size', '15', '--per_image_iteration', '7',
-                        '--epochs', '1', '--num_workers', '8',
-                        '--seed', '42', '--pin_mem',
-                        '--point_number', '6', '--batch_size', '1'])
+        # Run model in a separate thread
+        edited_image_name = 'edited_image.png'
+        model_thread = threading.Thread(target=run_model, args=(file_path, editing_prompt, edited_image_name))
+        model_thread.start()
 
-        # Define path for edited image (as needed, adjust according to output format)
-        edited_image_name = 'edited_image.png' # Adjust this name if necessary
-        edited_image_path = os.path.join(app.config['EDITED_PATH'], edited_image_name)
-
-        # Respond with the filename for the edited image
-        if os.path.exists(edited_image_path):
-            return jsonify({'success': True, 'edited_image': edited_image_name})
-        else:
-            return jsonify({'success': False, 'error': 'Image processing failed.'})
+        # Respond immediately while the model processes in the background
+        return jsonify({'success': True, 'message': 'Image is being processed. Check back later for the result.', 'edited_image': edited_image_name})
 
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
-
 if __name__ == '__main__':
     app.run(port=port_no)
