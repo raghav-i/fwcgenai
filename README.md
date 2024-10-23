@@ -8,7 +8,7 @@ Derma Insight is a web application designed to help users analyze their skin typ
 - Skin Type Analysis: Users can upload images of their skin to determine their skin type, whether it's oily, dry, or normal.
 - Skin Disease Detection: The application identifies potential skin diseases such as acne, alopecia areata, melasma, vitiligo, and more.
 - Educational Resources: Derma Insight provides educational resources and information about various skin diseases and conditions.
-
+- GenAI Powered Q&A: Users can leverage the Google Gemini model for personalized answers to dermatological questions, including descriptions of skin conditions and possible remedies tailored to their diagnosis.
 
 # Technologies Used
 
@@ -28,9 +28,10 @@ The project utilizes the **EfficientNet-B0** architecture, renowned for its effi
 - Regularization techniques, including dropout and batch normalization, enhance model generalization by preventing overfitting. 
 - Data augmentation, such as random flips and rotations, increases dataset variability, improving model robustness. These techniques collectively optimize model performance and enable accurate skin condition classification.
 
-# Screenshot
 
-![website](https://github.com/raghav-i/fwcgenai/blob/main/about.png)
+# Screenshots
+
+![website](https://github.com/raghav-i/fwcgenai/blob/main/landing.png)
 ![website](https://github.com/raghav-i/fwcgenai/blob/main/about.png)
 ![website](https://github.com/raghav-i/fwcgenai/blob/main/diseases.png)
 ![website](https://github.com/raghav-i/fwcgenai/blob/main/diagnose.png)
