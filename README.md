@@ -30,7 +30,12 @@ The project utilizes the **EfficientNet-B0** architecture, renowned for its effi
 
 # Screenshot
 
-![website](https://github.com/raghav-i/dermainsight/blob/main/dermainsight.jpeg)
+![website](https://github.com/raghav-i/dermainsight/blob/main/landingt.png)
+![website](https://github.com/raghav-i/dermainsight/blob/main/about.png)
+![website](https://github.com/raghav-i/dermainsight/blob/main/diseases.png)
+![website](https://github.com/raghav-i/dermainsight/blob/main/diagnose.png)
+
+
 
 # Getting Started
 
@@ -40,14 +45,12 @@ Pre-requisites:
 - torchvision 0.17.1
 
 
-To run the model locally, run the following in terminal:
+To run the app locally, run the following in terminal:
 
 ```
-$ git clone https://github.com/raghav-i/dermainsight.git
-$ cd dermainsight
-$ python3 -m venv skin-class-env
-$ source skin-class-env/bin/activate
-$ python3 predict.py -m "Path to torch model" -i "Path to image"
+$ git clone https://github.com/raghav-i/fwcgenai.git
+$ cd fwcgenai/app
+$ python app.py
 ```
 
 

@@ -113,7 +113,6 @@
                     <p>Small, benign growths caused by the human papillomavirus (HPV), appearing on the skin's surface, commonly on the hands and feet, and may vary in appearance depending on the type of HPV involved.</p>
                 </div>
     
-                <!-- Add other skin disease boxes similarly -->
             </div>
         </div>
     </section>
@@ -146,7 +145,6 @@
                 <label for="file-upload" class="custom-file-upload">
                     <i class="fas fa-cloud-upload-alt"></i> Choose File
                 </label>
-                <!-- Hidden file input element -->
                 {{ form.file(class="d-none", id="file-upload") }}
             </div>
         
@@ -165,7 +163,7 @@
         <div>
             <center><h4 style="color: #a0527c; font-size: 11;">Disease Description: </h4></center>
             <div id="disease-description" style="color: #a0527c; font-size: 11;">
-                {{description|safe}} <!-- Use 'safe' to allow HTML rendering -->
+                {{description|safe}} 
             </div>
         </div>
         {% endif %}
