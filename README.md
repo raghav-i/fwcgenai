@@ -50,8 +50,9 @@ To run the app locally, run the following in terminal:
 
 ```
 $ git clone https://github.com/raghav-i/fwcgenai.git
-$ cd fwcgenai/app
-$ python app.py
+$ cd fwcgenai
+$ pip install -r requirements.txt
+$ python app/app.py
 ```
 
 
