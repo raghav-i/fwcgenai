@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Derma Insight</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/viruses-solid.svg') }}" sizes="any" type="image/svg+xml">
+    <!-- Bootstrap CDN link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+    <!-- header section starts -->
+    <header class="fixed-top py-3">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="#" class="logo"><span class="fas fa-viruses"></span> Derma Insight</a>
+            <div id="menu-bar" class="fas fa-bars d-inline-block d-md-none"></div>
+            <nav class="nav">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#prevent">Skin type and diseases</a>
+                <a href="#check">Check my skin type</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+    <!-- header section end -->
+
+    <!-- home section starts -->
+    <section class="home" id="home">
+        <div class="container">
+            <div class="row min-vh-100 align-items-center pt-5">
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='images/dermat.jpg') }}" class="w-100" alt="">
+                </div>
+                <div class="col-md-6 content text-center text-md-start pl-md-5">
+                    <span>Your skin is your best accessory </span>
+                    <h3>Protect yourself from skin diseases</h3>
+                    <a href="https://newsinhealth.nih.gov/2015/11/keep-your-skin-healthy" class="link-btn">Learn more</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- home section ends -->
+    <section class="about" id="about">
+
+        <div class="container">
+    
+            <div class="row align-items-center flex-wrap-reverse">
+    
+                <div class="col-md-6 content">
+                    <h3>What are Skin Diseases?</h3>
+                    <p>Skin diseases are conditions that affect your skin. These diseases may cause rashes, inflammation, itchiness or other skin changes. Some skin conditions may be genetic, while lifestyle factors may cause others. Skin disease treatment may include medications, creams or ointments, or lifestyle changes.</p>
+                    <a href="https://www.niams.nih.gov/health-topics/skin-diseases" class="link-btn">Learn more</a>
+                </div>
+    
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='images/skindis.png') }}" class="w-100" alt="">
+                </div>
+    
+            </div>
+    
+        </div>
+    
+    </section>
+    <!-- prevent section starts -->
+    <section class="prevent" id="prevent">
+        <h1 class="heading"> <span>Skin Type and Skin Diseases</span> </h1>
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-center">
+                <!-- Disease boxes are unchanged -->
+                <div class="box p-4 m-2">
+                    <img src="{{ url_for('static', filename='images/dry.png') }}" alt="">
+                    <h3><a href = "https://www.niams.nih.gov/health-topics/acne" class = "h-btn">Acne</a></h3>
+                    <p>A common skin condition characterized by the presence of pimples, blackheads, and whiteheads typically occurring on the face, chest, and back due to clogged pores and inflammation.</p>
+                </div>
+    
+                <div class="box p-4 m-2">
+                    <img src="{{ url_for('static', filename='images/acne.png') }}" alt="">
+                    <h3><a href = "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2958495/" class = "h-btn">Acne Scars</a></h3>
+                    <p>Marks or depressions left on the skin after severe acne breakouts heal, resulting from damage to the skin's collagen fibers. They can vary in appearance and may fade over time but often require medical intervention for significant improvement.</p>
+                </div>
+                <div class="box p-4 m-2">
+                    <img src="{{ url_for('static', filename='images/Normal.png') }}" alt="">
+                    <h3><a href = "https://www.ncbi.nlm.nih.gov/books/NBK431057/" class = "h-btn">Acanthosis Nigricans</a></h3>
+                    <p>A skin condition characterized by thickened, dark, velvety patches of skin typically occurring in the folds and creases of the body, often associated with insulin resistance, obesity, hormonal disorders, or certain medications.</p>
+                </div>
+                <div class="box p-4 m-2">
+                    <img src="{{ url_for('static', filename='images/oily.png') }}" alt="">
+                    <h3><a href = "https://www.aad.org/public/diseases/hair-loss/types/alopecia" class = "h-btn">Alopecia Areata</a></h3>
+                    <p>An autoimmune condition causing sudden hair loss in round patches on the scalp or other parts of the body, thought to be triggered by the immune system attacking hair follicles.</p>
+                </div>
+                <div class="box p-4 m-2">
+                    <img src="{{ url_for('static', filename='images/Normal.png') }}" alt="">
+                    <h3><a href = "https://www.aad.org/public/diseases/a-z/melasma-overview" class = "h-btn">Melasma</a></h3>
+                    <p>A common skin condition causing brown or gray patches, typically on the face, triggered by hormonal changes, sun exposure, or genetics.</p>
+                </div>
+                <div class="box p-4 m-2">
+                    <img src="{{ url_for('static', filename='images/Sensitive.png') }}" alt="">
+                    <h3><a href = "https://www.niams.nih.gov/health-topics/vitiligo" class = "h-btn">Vitiligo</a></h3>
+                    <p>A skin disorder characterized by patches of depigmented skin due to the loss of melanin-producing cells, resulting in irregular white patches on the skin's surface.</p>
+                </div>
+                <div class="box p-4 m-2">
+                    <img src="{{ url_for('static', filename='images/acne.png') }}" alt="">
+                    <h3><a href = "https://www.betterhealth.vic.gov.au/health/conditionsandtreatments/warts" class = "h-btn">Warts</a></h3>
+                    <p>Small, benign growths caused by the human papillomavirus (HPV), appearing on the skin's surface, commonly on the hands and feet, and may vary in appearance depending on the type of HPV involved.</p>
+                </div>
+    
+                <!-- Add other skin disease boxes similarly -->
+            </div>
+        </div>
+    </section>
+    <!-- prevent section ends -->
+    <div id="chatbot" class="chatbot-container">
+        <div class="chatbot-header">
+            <span>DermaChat</span>
+
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <!-- Chat messages will appear here -->
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="user-input" placeholder="Type a message..." />
+            <button id="send-message">Send</button>
+        </div>
+    </div>
+    
+    <div id="chatbot-icon" class="chatbot-icon" onclick="toggleChatbot()">
+        <img src="{{ url_for('static', filename='images/chat.svg') }}" alt="Chatbot Icon" class="chatbot-svg" />
+    </div>
+    
+    <!-- check section starts -->
+    <section class="check" id="check">
+        <h1 class="heading"> <span>Check Your Skin Type</span> </h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div class="custom-file-input">
+                <label for="file-upload" class="custom-file-upload">
+                    <i class="fas fa-cloud-upload-alt"></i> Choose File
+                </label>
+                <!-- Hidden file input element -->
+                {{ form.file(class="d-none", id="file-upload") }}
+            </div>
+        
+            <!-- Image Preview Area -->
+            <img id="imagePreview" class="image-preview" alt="Uploaded Image" />
+        
+            <div class="custom-submit-button">
+                <center>{{ form.submit(type="submit", class="custom-submit-button", id="submit-button") }}</center>
+            </div>
+        </form>
+        
+        <br><br>
+
+        <!-- Skin Disease Description Section from Gemini API -->
+        {% if description %}
+        <div>
+            <center><h4 style="color: #a0527c; font-size: 11;">Disease Description: </h4></center>
+            <div id="disease-description" style="color: #a0527c; font-size: 11;">
+                {{description|safe}} <!-- Use 'safe' to allow HTML rendering -->
+            </div>
+        </div>
+        {% endif %}
+
+
+
+    </section>
+    <!-- check section ends -->
+
+    
+    
+    <!-- contact section starts -->
+    <section class="contact" id="contact">
+        <h1 class="heading"> <span>Contact</span> </h1>
+        <div class="container">
+            <div class="row flex-wrap-reverse">
+                <div class="col-md-7 p-2">
+                    <form action="https://formspree.io/f/mgegzbrb" method="POST">
+                        <input type="text" placeholder="Name" name="Name" class="box">
+                        <input type="email" placeholder="Email" name="_replyto" class="box">
+                        <input type="tel" placeholder="Phone Number" name="Phone Number" class="box">
+                        <textarea name="Message" placeholder="Message" id="" cols="30" rows="10"></textarea>
+                        <input type="submit" class="link-btn" value="Send message">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- contact section ends -->
+
+    <!-- footer section starts -->
+    <section class="footer">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-center text-center text-sm-start">
+                <div class="box p-3 m-2">
+                    <h3>Derma Insight</h3>
+                    <p>A web application designed to help users analyze their skin type and identify potential skin diseases using machine learning techniques.</p>
+                </div>
+                <div class="box p-3 m-2">
+                    <h3>Quick links</h3>
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#prevent">Skin type and diseases</a>
+                    <a href="#check">Check my skin type</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="box p-3 m-2">
+                    <h3>Connect</h3>
+                    <a href="https://github.com/raghav-i">GitHub<a>
+                    <a href="https://twitter.com/I_r_a_g_h_a_v_">Twitter</a>
+                </div>
+                <div class="box p-3 m-2">
+                    <h3>Contact info</h3>
+                    <a href="mailto:raghavendradabral@gmail.com">raghavendradabral@gmail.com</a>                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- footer section ends -->
+
+    <!-- js file link -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+

@@ -1,85 +1,140 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, render_template, jsonify  # Import jsonify
 from werkzeug.utils import secure_filename
 import os
-import subprocess
-import cv2
-import matplotlib.pyplot as plt
-from pyngrok import ngrok
-import threading
+import torch
+from PIL import Image
+import torchvision.transforms as T
+import google.generativeai as genai
+from dotenv import load_dotenv
+from flask_wtf import FlaskForm
+from wtforms import FileField, SubmitField, TextAreaField
+from wtforms.validators import InputRequired
+import logging
 
-# Flask app setup
+load_dotenv()
+
+
+# Initialize Flask app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
-app.config['UPLOAD_PATH'] = 'static/uploads'  # Upload directory
-app.config['EDITED_PATH'] = 'static/edited'  # Directory for edited images
+app.config['UPLOAD_PATH'] = 'static/uploads'
 
-# Ensure the upload and edited directories exist
-os.makedirs(app.config['UPLOAD_PATH'], exist_ok=True)
-os.makedirs(app.config['EDITED_PATH'], exist_ok=True)
+# Set up the Gemini API key directly in the Flask app
+app.config['GEMINI_API_KEY'] = os.getenv('GEMINI_API_KEY')
+genai.configure(api_key=app.config['GEMINI_API_KEY'])
 
-# Set the port for the Flask app
-port_no = 5000
+# Define form for file upload
+class UploadFileForm(FlaskForm):
+    file = FileField("File", validators=[InputRequired()])
+    submit = SubmitField("Submit")
 
-# Set ngrok authentication token (replace with your own token)
-ngrok.set_auth_token("YOUR_AUTH_TOKEN")
-public_url = ngrok.connect(port_no).public_url
-print(f"To access the global link, please click {public_url}")
+def format_chat_response(response):
 
-# Visualization code
-def plot_single_image(img_file_path, title):
-    img_bgr = cv2.imread(img_file_path)
-    img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
-    plt.imshow(img_rgb)
-    plt.axis('off')
-    plt.title(title)
-    plt.show()
+    while '**' in response:
+        response = response.replace('**', '<strong>', 1)
+        response = response.replace('**', '</strong>', 1)
 
-@app.route('/', methods=['GET'])
+
+    response = response.replace('.**', '.<br><br>')
+
+
+    lines = response.splitlines()  
+    formatted_lines = []
+    for line in lines:
+        if line.startswith('*'):
+            line = line[1:].strip()  
+            formatted_lines.append(f'<li>{line}</li>') 
+        else:
+            formatted_lines.append(line) 
+
+    if formatted_lines:
+        response = '<ul>' + ''.join(formatted_lines) + '</ul>'
+
+    return response
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_message = request.json.get('message')  
+    app.logger.info(f"Received message: {user_message}")  
+
+    if user_message:
+        response = get_gemini_response(user_message)  
+        formatted_response = format_chat_response(response)  
+        app.logger.info(f"Response from Gemini: {formatted_response}")  
+        return jsonify({'response': formatted_response})  
+    app.logger.warning("No message received")  
+    return jsonify({'response': 'No message received'}), 400
+
+def get_gemini_response(question):
+    model = genai.GenerativeModel("gemini-pro")
+    chat = model.start_chat(history=[])
+    response = chat.send_message(question, stream=True)
+    full_response = ""
+    for chunk in response:
+        full_response += chunk.text
+    return full_response
+
+
+def format_gemini_response(response):
+    formatted_response = response
+    while '**' in formatted_response:
+        formatted_response = formatted_response.replace('**', '<strong>', 1)
+        formatted_response = formatted_response.replace('**', '</strong>', 1)
+    
+  
+    formatted_response = formatted_response.replace('\n', '<br>')
+    return formatted_response
+
+
+
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/home', methods=['GET', 'POST'])
 def home():
-    return render_template("index.html")
+    res = None
+    description = None
+    form = UploadFileForm()
+    chat_response = None  
+    show_chat_form = False  
 
-def run_model(file_path, editing_prompt, edited_image_name):
-    try:
-        subprocess.run(['torchrun', '--rdzv_backend=c10d', '--rdzv_endpoint=localhost:29501', '--nnodes=1', '--nproc_per_node=1', 'train.py',
-                        '--image_file_path', file_path,
-                        '--image_caption', 'trees',
-                        '--editing_prompt', editing_prompt,
-                        '--diffusion_model_path', 'stabilityai/stable-diffusion-2-inpainting',
-                        '--output_dir', app.config['EDITED_PATH'],
-                        '--draw_box', '--lr', '5e-3',
-                        '--max_window_size', '15', '--per_image_iteration', '7',
-                        '--epochs', '1', '--num_workers', '8',
-                        '--seed', '42', '--pin_mem',
-                        '--point_number', '6', '--batch_size', '1'])
-
-        edited_image_path = os.path.join(app.config['EDITED_PATH'], edited_image_name)
-        if not os.path.exists(edited_image_path):
-            print('Image processing failed.')
-
-    except Exception as e:
-        print(f"Error during model execution: {str(e)}")
-
-@app.route('/upload', methods=['POST'])
-def upload():
-    try:
-        # Save uploaded file
-        file = request.files['file']
+    if form.validate_on_submit():
+        file = form.file.data  
         filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_PATH'], filename)
-        file.save(file_path)
+        filepath = os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_PATH'], filename)
+        file.save(filepath)  
 
-        # Retrieve the user-provided prompt
-        editing_prompt = request.form['prompt']
+        # Perform image classification
+        classes = ['acanthosis-nigricans', 'acne', 'acne-scars', 'alopecia-areata', 'dry', 'melasma', 'oily', 'vitiligo', 'warts']
+        model = torch.load('./skin-model.pt', map_location=torch.device('cpu'))
+        device = torch.device('cpu')
+        model.to(device)
+        img = Image.open(filepath).convert("RGB")
+        tr = get_transforms()
+        res = predict(model, img, tr, classes) 
 
-        # Run model in a separate thread
-        edited_image_name = 'edited_image.png'
-        model_thread = threading.Thread(target=run_model, args=(file_path, editing_prompt, edited_image_name))
-        model_thread.start()
+        # Get description from Gemini based on the diagnosis
+        diagnosis = f"The diagnosis is: {res}. Can you provide a simple explanation about this condition? Additionally, provide a simple remedy or treatment and other medical suggestions relevant."
+        description = get_gemini_response(diagnosis)  # Fetch response from Gemini LLM
+        description = format_gemini_response(description)
 
-        # Respond immediately while the model processes in the background
-        return jsonify({'success': True, 'message': 'Image is being processed. Check back later for the result.', 'edited_image': edited_image_name})
+    return render_template("index.html", form=form, res=res, description=description, chat_response=chat_response)
 
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
+
+
+
+
+# Function to apply image transforms
+def get_transforms():
+    transform = []
+    transform.append(T.Resize((512, 512)))
+    transform.append(T.ToTensor())
+    return T.Compose(transform)
+
+def predict(model, img, tr, classes):
+    img_tensor = tr(img)
+    out = model(img_tensor.unsqueeze(0))
+    pred, idx = torch.max(out, 1)
+    return classes[idx]
+
 if __name__ == '__main__':
-    app.run(port=port_no)
+    app.run(debug=True)
