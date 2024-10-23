@@ -30,10 +30,10 @@ The project utilizes the **EfficientNet-B0** architecture, renowned for its effi
 
 # Screenshot
 
-![website](https://github.com/raghav-i/dermainsight/blob/main/landingt.png)
-![website](https://github.com/raghav-i/dermainsight/blob/main/about.png)
-![website](https://github.com/raghav-i/dermainsight/blob/main/diseases.png)
-![website](https://github.com/raghav-i/dermainsight/blob/main/diagnose.png)
+![website](https://github.com/raghav-i/fwcgenai/blob/main/about.png)
+![website](https://github.com/raghav-i/fwcgenai/blob/main/about.png)
+![website](https://github.com/raghav-i/fwcgenai/blob/main/diseases.png)
+![website](https://github.com/raghav-i/fwcgenai/blob/main/diagnose.png)
 
 
 
